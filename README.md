@@ -49,14 +49,16 @@ echo GROQ_API_KEY="YOUR_GROQ_API_KEY_HERE" > .env
 6️⃣ Start the FastAPI Server
 uvicorn main:app --reload
 
-**# Create a questions.txt file with your queries**  
-**echo "Scrape the list of highest grossing films from Wikipedia. It is at the URL:**
-**https://en.wikipedia.org/wiki/List_of_highest-grossing_films**
 
-**Answer the following questions and respond with a JSON array of strings containing the answer.**
-**1. How many $2 bn movies were released before 2000?**
-**2. Which is the earliest film that grossed over $1.5 bn?" > questions.txt**
+Create a questions.txt file with your queries
+echo "Scrape the list of highest grossing films from Wikipedia. It is at the URL:
+https://en.wikipedia.org/wiki/List_of_highest-grossing_films
 
-**# Send the request using curl**  
-**curl -X POST "http://127.0.0.1:8000/api/" -F "questions.txt=@questions.txt"**
+Answer the following questions and respond with a JSON array of strings containing the answer.
+1. How many $2 bn movies were released before 2000?
+2. Which is the earliest film that grossed over $1.5 bn?" > questions.txt
+
+Send the request using curl
+curl -X POST "http://127.0.0.1:8000/api/" -F "questions.txt=@questions.txt"
+
 
