@@ -30,25 +30,26 @@ The agent can source data from the web, prepare it, perform statistical analysis
 ## ⚙️ Complete Setup, Configuration, Running, Testing & Deployment
 
 ```bash
-# 1️⃣ Clone the Repository
+1️⃣ Clone the Repository
 git clone https://github.com/Priyansh2359/data-agent-final.git
 cd data-agent-final
 
-# 2️⃣ Create a Python Virtual Environment
+2️⃣ Create a Python Virtual Environment
 python -m venv venv
 
-# 3️⃣ Activate the Virtual Environment (Windows PowerShell)
+3️⃣ Activate the Virtual Environment (Windows PowerShell)
 .\venv\Scripts\activate
 
-# 4️⃣ Install Dependencies
+4️⃣ Install Dependencies
 pip install -r requirements.txt
 
-# 5️⃣ Create a .env File and Add Your API Key
+5️⃣ Create a .env File and Add Your API Key
 echo GROQ_API_KEY="YOUR_GROQ_API_KEY_HERE" > .env
 
-# 6️⃣ Start the FastAPI Server
+6️⃣ Start the FastAPI Server
 uvicorn main:app --reload
-# Create a questions.txt file with your queries
+
+**Create a questions.txt file with your queries**
 echo "Scrape the list of highest grossing films from Wikipedia. It is at the URL:
 https://en.wikipedia.org/wiki/List_of_highest-grossing_films
 
@@ -56,5 +57,5 @@ Answer the following questions and respond with a JSON array of strings containi
 1. How many $2 bn movies were released before 2000?
 2. Which is the earliest film that grossed over $1.5 bn?" > questions.txt
 
-# Send the request using curl
+**Send the request using curl**
 curl -X POST "http://127.0.0.1:8000/api/" -F "questions.txt=@questions.txt"
