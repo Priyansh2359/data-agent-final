@@ -1,0 +1,20 @@
+# For the web server
+fastapi
+uvicorn[standard]
+python-multipart
+# For the LLM agent
+langchain
+langchain-openai
+langchain-experimental
+
+# For data analysis tools
+pandas
+numpy
+scikit-learn
+matplotlib
+beautifulsoup4
+duckdb
+lxml
+
+# For handling API keys
+python-dotenv
