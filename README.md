@@ -26,3 +26,20 @@ This project is a fully autonomous AI Data Analyst Agent. It exposes a powerful 
 ```bash
 git clone [https://github.com/Priyansh2359/data-agent-final.git](https://github.com/Priyansh2359/data-agent-final.git)
 cd data-agent-final
+# Create a virtual environment
+python -m venv venv
+
+# Activate it (on Windows PowerShell)
+.\venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+GROQ_API_KEY="YOUR_GROQ_API_KEY_HERE"
+uvicorn main:app --reload
+Scrape the list of highest grossing films from Wikipedia. It is at the URL:
+[https://en.wikipedia.org/wiki/List_of_highest-grossing_films](https://en.wikipedia.org/wiki/List_of_highest-grossing_films)
+
+Answer the following questions and respond with a JSON array of strings containing the answer.
+1. How many $2 bn movies were released before 2000?
+2. Which is the earliest film that grossed over $1.5 bn?
+curl.exe -X POST "[http://127.0.0.1:8000/api/](http://127.0.0.1:8000/api/)" -F "questions.txt=@question.txt"
