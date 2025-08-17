@@ -47,7 +47,7 @@ def create_agent(file_path: str = None, file_content: str = None):
         # If we have a DataFrame, make it available within the Python tool's environment
         tools[0].locals = {"df": df}
 
-    # This is the new, improved instruction prompt for the agent
+    # This is the detailed instruction prompt for the agent
     template = f"""
     You are a powerful data analyst agent. Your goal is to answer the user's questions accurately by writing and executing Python code.
 
