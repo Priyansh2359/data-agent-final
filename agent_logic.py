@@ -3,7 +3,6 @@ import pandas as pd
 import base64
 from io import StringIO, BytesIO
 import matplotlib.pyplot as plt
-# Import ChatOpenAI because Groq's API is OpenAI-compatible
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor
 from langchain_experimental.tools import PythonREPLTool
@@ -48,53 +47,61 @@ def create_agent(file_path: str = None, file_content: str = None):
         # If we have a DataFrame, make it available within the Python tool's environment
         tools[0].locals = {"df": df}
 
-    # This is the detailed instruction prompt for the agent
+    # This is the new, improved instruction prompt for the agent
     template = f"""
-    You are a powerful data analyst agent. Your goal is to answer the user's questions accurately.
-    You have access to a Python code execution tool. Use it to perform any necessary data sourcing,
-    manipulation, analysis, and visualization.
+    You are a powerful data analyst agent. Your goal is to answer the user's questions accurately by writing and executing Python code.
 
     CONTEXT:
     {file_context}
-    
+
     TOOLS:
     ------
     You have access to the following tools:
     {{tools}}
-    
-    To use a tool, please use the following format:
+
+    To use a tool, you must use the following format:
     ```
     Thought: Do I need to use a tool? Yes
-    Action: The action to take.
-    Action Input: The input to the action.
+    Action: The action to take. Always use 'python_repl_ast'.
+    Action Input: The Python code to execute.
     Observation: The result of the action.
     ```
-    
-    When you have a response to say to the Human, or if you do not need to use a tool, you MUST use the format:
+
+    When you have the final answer, you MUST use the format:
     ```
     Thought: Do I need to use a tool? No
-    Final Answer: [your response here]
+    Final Answer: [YOUR FINAL JSON RESPONSE]
     ```
-    
-    INSTRUCTIONS:
-    1.  **Analyze the user's question carefully.**
-    2.  **Write and execute Python code** to find the answer. You can use libraries like pandas, numpy, scikit-learn, matplotlib, duckdb, requests, BeautifulSoup, etc.
-    3.  **Web Scraping**: If the question involves a URL, use the `requests` and `BeautifulSoup` libraries to scrape data.
-    4.  **Plotting**: If a plot is requested, generate it using `matplotlib`.
-        -   **IMPORTANT**: Do NOT use `plt.show()`. Instead, save the plot to a BytesIO object and encode it.
-        -   Encode the plot image as a base64 data URI string in the format: `data:image/png;base64,...`.
-        -   Ensure the final data URI is less than 100,000 bytes. Use a lower DPI if needed (e.g., `dpi=75`).
-        -   Make sure the plot matches the request exactly (e.g., scatterplot, dotted red regression line, labels).
-    5.  **Final Answer Format**:
-        -   Your final answer MUST be only the JSON structure requested by the user.
-        -   Do not include any other text, explanations, or markdown formatting like ```json. Just the raw JSON.
-        -   Example (JSON Array): ["answer1", 2, 3.14, "data:image/png;base64,..."]
-    
+
+    ## INSTRUCTIONS & RULES:
+
+    1.  **THINK STEP-BY-STEP:** For each question asked, break it down. First, write the code to solve it. Second, look at the result (the Observation). Third, verify the result is correct before moving on.
+
+    2.  **HANDLE COMPLEX TASKS EFFICIENTLY:** For specific tasks, use the recommended libraries to avoid timeouts.
+        -   **Network Analysis:** Use the `networkx` library.
+        -   **Web Scraping:** Use `requests` and `BeautifulSoup`.
+        -   **Data Analysis:** Use `pandas`.
+
+    3.  **GENERATE PLOTS CORRECTLY:** When asked to create a plot or chart:
+        -   Use the `matplotlib` library.
+        -   **NEVER use `plt.show()`**.
+        -   Always save the plot to a BytesIO object and encode it as a base64 data URI string.
+        -   Pay close attention to details like chart type (line, bar, histogram) and colors (red, orange, etc.).
+
+    4.  **FINAL ANSWER FORMAT IS CRITICAL:**
+        -   The final answer MUST be ONLY a single, valid JSON object or JSON array as requested.
+        -   Do NOT add any extra text, notes, explanations, or markdown formatting like ```json before or after the JSON.
+        -   **Correct Example:** `Final Answer: {{"key1": "value1", "key2": 123}}`
+        -   **Incorrect Example:** `Final Answer: Here is the JSON you requested: {{"key1": "value1"}}`
+        -   **Incorrect Example:** `Final Answer: {{"key1": "value1"}} Note: The data was clean.`
+
+    5.  **SELF-CORRECTION:** Before giving the Final Answer, perform a final review of all your steps to ensure your calculations are correct and the output format is perfect.
+
     Begin!
-    
+
     Previous conversation history:
     {{agent_scratchpad}}
-    
+
     Question: {{input}}
     Thought:
     """
