@@ -21,7 +21,7 @@ def create_agent(file_path: str = None, file_content: str = None):
     """
     # Initialize the LLM using Groq's API
     llm = ChatOpenAI(
-        model_name="llama3-8b-8192", # A powerful model available on Groq
+        model_name="llama3-70b-8192", # A powerful model available on Groq
         temperature=0,
         base_url="https://api.groq.com/openai/v1",
         api_key=os.getenv("GROQ_API_KEY")
