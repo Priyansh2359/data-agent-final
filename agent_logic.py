@@ -83,7 +83,6 @@ def create_agent(file_path: str = None, file_content: str = None):
     4.  **FINAL ANSWER FORMAT IS CRITICAL:**
         -   The final answer MUST be ONLY a single, valid JSON object or JSON array as requested.
         -   Do NOT add any extra text, notes, explanations, or markdown formatting like ```json before or after the JSON.
-        -   **Correct Example:** `Final Answer: {{"key1": "value1", "key2": 123}}`
         -   **Incorrect Example:** `Final Answer: Here is the JSON you requested: {{"key1": "value1"}}`
 
     5.  **SELF-CORRECTION:** Before giving the Final Answer, perform a final review of all your steps to ensure your calculations are correct and the output format is perfect.
