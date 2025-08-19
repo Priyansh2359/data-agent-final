@@ -15,7 +15,7 @@ app = FastAPI()
 # Timeout for the agent query in seconds
 AGENT_TIMEOUT = 170 # 2 minutes and 50 seconds, just under the 3 min limit
 
-@app.post("/api/")
+@app.post("/")
 async def analyze_data(request: Request):
     try:
         form_data = await request.form()
@@ -29,12 +29,10 @@ async def analyze_data(request: Request):
         data_file = None
         data_content = None
         
-        # Find the first potential data file (e.g., .csv)
         for key, value in form_data.items():
             if key != "questions.txt" and isinstance(value, UploadFile) and value.filename:
                 data_file = value
                 try:
-                    # Try to decode as text first
                     data_content = (await data_file.read()).decode("utf-8")
                     logger.info(f"Received data file: {data_file.filename}")
                 except UnicodeDecodeError:
@@ -50,7 +48,6 @@ async def analyze_data(request: Request):
         
         async def run_agent_query(agent, question):
             try:
-                # Use ainvoke for async execution
                 response = await agent.ainvoke({"input": question})
                 return response["output"]
             except Exception as e:
@@ -67,7 +64,6 @@ async def analyze_data(request: Request):
         logger.info(f"Agent raw output: {result_str}")
 
         try:
-            # Clean the output in case the LLM adds extra text or markdown
             if "Final Answer:" in result_str:
                 result_str = result_str.split("Final Answer:")[-1].strip()
             if result_str.startswith("```json"):
